@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_football_match_tree" model="ir.ui.view">
+        <field name="name">football.match.tree</field>
+        <field name="model">football.match</field>
+        <field name="arch" type="xml">
+            <tree string="Partidos"
+                  decoration-success="state == 'played' and result_label != 'Derrota'"
+                  decoration-info="state == 'confirmed'"
+                  decoration-muted="state == 'cancelled'"
+                  decoration-danger="result_label == 'Derrota'">
+                <field name="match_date"/>
+                <field name="code"/>
+                <field name="team_id"/>
+                <field name="opponent"/>
+                <field name="field_name"/>
+                <field name="match_type"/>
+                <field name="state" widget="badge"/>
+                <field name="goals_for" sum="Goles a favor"/>
+                <field name="goals_against" sum="Goles en contra"/>
+                <field name="total_goals" sum="Total de goles"/>
+                <field name="result_label"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_football_match_form" model="ir.ui.view">
+        <field name="name">football.match.form</field>
+        <field name="model">football.match</field>
+        <field name="arch" type="xml">
+            <form string="Partido">
+                <header>
+                    <button name="action_confirm" string="Confirmar" type="object" class="btn-primary"/>
+                    <button name="action_mark_played" string="Marcar jugado" type="object"/>
+                    <button name="action_cancel" string="Cancelar" type="object"/>
+                    <button name="action_set_draft" string="Volver a borrador" type="object"/>
+                    <button name="action_print_pending_matches" string="Informe pendientes" type="object"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,played,cancelled"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="code"/>
+                        <h1>
+                            <field name="code" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="team_id"/>
+                            <field name="opponent"/>
+                            <field name="match_date"/>
+                            <field name="field_name"/>
+                        </group>
+                        <group>
+                            <field name="match_type"/>
+                            <field name="result_label" readonly="1"/>
+                            <field name="goals_for"/>
+                            <field name="goals_against"/>
+                            <field name="total_goals" readonly="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Convocatoria">
+                            <field name="player_ids"
+                                   widget="many2many_tags"
+                                   domain="[('team_id', '=', team_id), ('state', '=', 'available')]"/>
+                        </page>
+                        <page string="Observaciones">
+                            <field name="notes" placeholder="Observaciones del partido"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_football_match_calendar" model="ir.ui.view">
+        <field name="name">football.match.calendar</field>
+        <field name="model">football.match</field>
+        <field name="arch" type="xml">
+            <calendar string="Calendario de partidos"
+                      date_start="match_date"
+                      color="team_id"
+                      event_open_popup="true">
+                <field name="code"/>
+                <field name="team_id"/>
+                <field name="opponent"/>
+                <field name="field_name"/>
+                <field name="state"/>
+            </calendar>
+        </field>
+    </record>
+
+    <record id="view_football_match_search" model="ir.ui.view">
+        <field name="name">football.match.search</field>
+        <field name="model">football.match</field>
+        <field name="arch" type="xml">
+            <search string="Buscar partidos">
+                <!-- Búsqueda general por código, rival o campo. -->
+                <field name="code"
+                       string="Código, rival o campo"
+                       filter_domain="['|', '|', ('code', 'ilike', self), ('opponent', 'ilike', self), ('field_name', 'ilike', self)]"/>
+                <field name="team_id"/>
+                <field name="opponent"/>
+                <field name="field_name"/>
+
+                <filter name="confirmed_matches" string="Confirmados" domain="[('state', '=', 'confirmed')]"/>
+                <filter name="played_matches" string="Jugados" domain="[('state', '=', 'played')]"/>
+                <filter name="pending_matches" string="Pendientes" domain="[('state', 'in', ['draft', 'confirmed'])]"/>
+                <separator/>
+                <filter name="league_matches" string="Liga" domain="[('match_type', '=', 'league')]"/>
+                <filter name="friendly_matches" string="Amistoso" domain="[('match_type', '=', 'friendly')]"/>
+                <filter name="tournament_matches" string="Torneo" domain="[('match_type', '=', 'tournament')]"/>
+                <separator/>
+                <filter name="upcoming_matches" string="Próximos partidos" domain="[('state', 'in', ['draft', 'confirmed'])]"/>
+
+                <group expand="0" string="Agrupar por">
+                    <filter name="group_team" string="Equipo" context="{'group_by': 'team_id'}"/>
+                    <filter name="group_state" string="Estado" context="{'group_by': 'state'}"/>
+                    <filter name="group_match_type" string="Tipo de partido" context="{'group_by': 'match_type'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_football_match" model="ir.actions.act_window">
+        <field name="name">Partidos</field>
+        <field name="res_model">football.match</field>
+        <field name="view_mode">tree,form,calendar</field>
+        <field name="search_view_id" ref="view_football_match_search"/>
+        <field name="context">{'search_default_pending_matches': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Crea partidos y gestiona convocatorias.</p>
+        </field>
+    </record>
+
+    <menuitem id="menu_football_matches"
+              name="Partidos"
+              parent="menu_football_management"
+              action="action_football_match"
+              sequence="30"/>
+</odoo>

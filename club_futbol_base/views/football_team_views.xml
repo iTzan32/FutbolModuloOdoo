@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_football_team_tree" model="ir.ui.view">
+        <field name="name">football.team.tree</field>
+        <field name="model">football.team</field>
+        <field name="arch" type="xml">
+            <tree string="Equipos">
+                <field name="name"/>
+                <field name="category"/>
+                <field name="season"/>
+                <field name="coach_name"/>
+                <field name="phone"/>
+                <field name="player_count"/>
+                <field name="active" widget="boolean_toggle"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_football_team_form" model="ir.ui.view">
+        <field name="name">football.team.form</field>
+        <field name="model">football.team</field>
+        <field name="arch" type="xml">
+            <form string="Equipo">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Nombre del equipo"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="category"/>
+                            <field name="season"/>
+                            <field name="coach_name"/>
+                        </group>
+                        <group>
+                            <field name="phone"/>
+                            <field name="player_count" readonly="1"/>
+                            <field name="active"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Jugadores">
+                            <!-- Lista editable para mantener la plantilla desde el propio equipo. -->
+                            <field name="player_ids">
+                                <tree editable="bottom" string="Jugadores">
+                                    <field name="jersey_number"/>
+                                    <field name="name"/>
+                                    <field name="surname"/>
+                                    <field name="full_name" readonly="1"/>
+                                    <field name="position"/>
+                                    <field name="state"/>
+                                    <field name="birthdate"/>
+                                    <field name="age" readonly="1"/>
+                                    <field name="phone"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Partidos">
+                            <field name="match_ids" readonly="1">
+                                <tree string="Partidos">
+                                    <field name="code"/>
+                                    <field name="opponent"/>
+                                    <field name="match_date"/>
+                                    <field name="field_name"/>
+                                    <field name="match_type"/>
+                                    <field name="state" widget="badge"/>
+                                    <field name="result_label"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_football_team_search" model="ir.ui.view">
+        <field name="name">football.team.search</field>
+        <field name="model">football.team</field>
+        <field name="arch" type="xml">
+            <search string="Buscar equipos">
+                <field name="name"/>
+                <field name="coach_name"/>
+                <field name="season"/>
+                <filter name="active_teams" string="Activos" domain="[('active', '=', True)]"/>
+                <group expand="0" string="Agrupar por">
+                    <filter name="group_category" string="Categoría" context="{'group_by': 'category'}"/>
+                    <filter name="group_season" string="Temporada" context="{'group_by': 'season'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_football_team" model="ir.actions.act_window">
+        <field name="name">Equipos</field>
+        <field name="res_model">football.team</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_football_team_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Crea el primer equipo del club.</p>
+        </field>
+    </record>
+
+    <menuitem id="menu_football_teams"
+              name="Equipos"
+              parent="menu_football_management"
+              action="action_football_team"
+              sequence="10"/>
+</odoo>

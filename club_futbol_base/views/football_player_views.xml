@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_football_player_tree" model="ir.ui.view">
+        <field name="name">football.player.tree</field>
+        <field name="model">football.player</field>
+        <field name="arch" type="xml">
+            <tree string="Jugadores"
+                  decoration-success="state == 'available'"
+                  decoration-warning="state == 'injured'"
+                  decoration-danger="state in ('suspended', 'inactive')">
+                <field name="jersey_number"/>
+                <field name="full_name"/>
+                <field name="team_id"/>
+                <field name="position"/>
+                <field name="state" widget="badge"/>
+                <field name="age"/>
+                <field name="phone"/>
+                <field name="dni"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_football_player_form" model="ir.ui.view">
+        <field name="name">football.player.form</field>
+        <field name="model">football.player</field>
+        <field name="arch" type="xml">
+            <form string="Jugador">
+                <sheet>
+                    <field name="photo" widget="image" class="oe_avatar"/>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="full_name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="surname"/>
+                            <field name="dni"/>
+                            <field name="phone"/>
+                        </group>
+                        <group>
+                            <field name="team_id"/>
+                            <field name="position"/>
+                            <field name="jersey_number"/>
+                            <field name="state"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="birthdate"/>
+                        <field name="age" readonly="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_football_player_kanban" model="ir.ui.view">
+        <field name="name">football.player.kanban</field>
+        <field name="model">football.player</field>
+        <field name="arch" type="xml">
+            <kanban string="Jugadores" default_group_by="team_id">
+                <field name="photo"/>
+                <field name="full_name"/>
+                <field name="position"/>
+                <field name="state"/>
+                <field name="jersey_number"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click o_kanban_record">
+                            <div class="o_kanban_image">
+                                <field name="photo" widget="image"/>
+                            </div>
+                            <div class="oe_kanban_details">
+                                <strong>
+                                    <field name="full_name"/>
+                                </strong>
+                                <div>
+                                    Dorsal <field name="jersey_number"/>
+                                </div>
+                                <div>
+                                    <field name="position"/>
+                                </div>
+                                <div>
+                                    <field name="state" widget="badge"/>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="view_football_player_search" model="ir.ui.view">
+        <field name="name">football.player.search</field>
+        <field name="model">football.player</field>
+        <field name="arch" type="xml">
+            <search string="Buscar jugadores">
+                <field name="full_name"/>
+                <field name="dni"/>
+                <field name="team_id"/>
+                <filter name="available_players" string="Disponibles" domain="[('state', '=', 'available')]"/>
+                <filter name="injured_players" string="Lesionados" domain="[('state', '=', 'injured')]"/>
+                <group expand="0" string="Agrupar por">
+                    <filter name="group_team" string="Equipo" context="{'group_by': 'team_id'}"/>
+                    <filter name="group_position" string="Posición" context="{'group_by': 'position'}"/>
+                    <filter name="group_state" string="Estado" context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_football_player" model="ir.actions.act_window">
+        <field name="name">Jugadores</field>
+        <field name="res_model">football.player</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="search_view_id" ref="view_football_player_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Registra los jugadores del club.</p>
+        </field>
+    </record>
+
+    <menuitem id="menu_football_players"
+              name="Jugadores"
+              parent="menu_football_management"
+              action="action_football_player"
+              sequence="20"/>
+</odoo>

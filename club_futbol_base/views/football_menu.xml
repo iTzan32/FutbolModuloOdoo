@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_football_root"
+              name="Club Fútbol Base"
+              sequence="10"/>
+
+    <menuitem id="menu_football_management"
+              name="Gestión deportiva"
+              parent="menu_football_root"
+              sequence="10"/>
+</odoo>

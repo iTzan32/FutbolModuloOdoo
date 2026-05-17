@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_pending_matches_document">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="team">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <h2>Club Fútbol Base</h2>
+                        <h3>Informe de partidos pendientes por equipo</h3>
+
+                        <div class="row mt16 mb16">
+                            <div class="col-6">
+                                <p><strong>Equipo:</strong> <span t-field="team.name"/></p>
+                                <p><strong>Categoría:</strong> <span t-field="team.category"/></p>
+                                <p><strong>Temporada:</strong> <span t-field="team.season"/></p>
+                            </div>
+                            <div class="col-6">
+                                <p><strong>Entrenador:</strong> <span t-field="team.coach_name"/></p>
+                                <p><strong>Fecha de generación:</strong> <span t-esc="time.strftime('%d/%m/%Y %H:%M')"/></p>
+                            </div>
+                        </div>
+
+                        <t t-set="pending_matches" t-value="team.get_pending_matches_for_report()"/>
+                        <h4>Partidos pendientes o confirmados</h4>
+                        <table class="table table-sm o_main_table">
+                            <thead>
+                                <tr>
+                                    <th>Código</th>
+                                    <th>Rival</th>
+                                    <th>Fecha</th>
+                                    <th>Campo</th>
+                                    <th>Tipo</th>
+                                    <th>Estado</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr t-foreach="pending_matches" t-as="match">
+                                    <td><span t-field="match.code"/></td>
+                                    <td><span t-field="match.opponent"/></td>
+                                    <td><span t-field="match.match_date"/></td>
+                                    <td><span t-field="match.field_name"/></td>
+                                    <td><span t-field="match.match_type"/></td>
+                                    <td><span t-field="match.state"/></td>
+                                </tr>
+                                <tr t-if="not pending_matches">
+                                    <td colspan="6" class="text-center">No hay partidos pendientes para este equipo.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <t t-set="available_players" t-value="team.get_available_players_for_report()"/>
+                        <h4 class="mt24">Jugadores disponibles</h4>
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Nombre</th>
+                                    <th>Posición</th>
+                                    <th>Dorsal</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr t-foreach="available_players" t-as="player">
+                                    <td><span t-field="player.full_name"/></td>
+                                    <td><span t-field="player.position"/></td>
+                                    <td><span t-field="player.jersey_number"/></td>
+                                </tr>
+                                <tr t-if="not available_players">
+                                    <td colspan="3" class="text-center">No hay jugadores disponibles.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

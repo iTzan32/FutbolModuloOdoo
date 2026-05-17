@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_create_match_wizard_form" model="ir.ui.view">
+        <field name="name">football.create.match.wizard.form</field>
+        <field name="model">football.create.match.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Crear partido rápido">
+                <group>
+                    <field name="team_id"/>
+                    <field name="opponent"/>
+                    <field name="match_date"/>
+                    <field name="field_name"/>
+                    <field name="match_type"/>
+                    <field name="include_available_players"/>
+                    <field name="notes"/>
+                </group>
+                <footer>
+                    <button name="action_create_match" string="Crear partido" type="object" class="btn-primary"/>
+                    <button string="Cancelar" special="cancel" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_create_match_wizard" model="ir.actions.act_window">
+        <field name="name">Crear partido rápido</field>
+        <field name="res_model">football.create.match.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem id="menu_football_create_match_wizard"
+              name="Crear partido rápido"
+              parent="menu_football_management"
+              action="action_create_match_wizard"
+              sequence="40"/>
+</odoo>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_report_pending_matches" model="ir.actions.report">
+        <field name="name">Informe de partidos pendientes por equipo</field>
+        <field name="model">football.team</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">club_futbol_base.report_pending_matches_document</field>
+        <field name="report_file">club_futbol_base.report_pending_matches_document</field>
+        <field name="binding_model_id" ref="model_football_team"/>
+        <field name="binding_type">report</field>
+        <field name="print_report_name">'Partidos pendientes - %s' % (object.name)</field>
+    </record>
+</odoo>
+
