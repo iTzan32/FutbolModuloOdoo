@@ -1,13 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <!-- Plantilla QWeb que construye el PDF de partidos pendientes. -->
     <template id="report_pending_matches_document">
+        <!-- Contenedor HTML estándar de informes Odoo. -->
         <t t-call="web.html_container">
+            <!-- Repite el informe para cada equipo seleccionado. -->
             <t t-foreach="docs" t-as="team">
+                <!-- Layout externo con cabecera y pie de página de Odoo. -->
                 <t t-call="web.external_layout">
                     <div class="page">
+                        <!-- Títulos principales del documento. -->
                         <h2>Club Fútbol Base</h2>
                         <h3>Informe de partidos pendientes por equipo</h3>
 
+                        <!-- Bloque superior con datos del equipo y fecha. -->
                         <div class="row mt16 mb16">
                             <div class="col-6">
                                 <p><strong>Equipo:</strong> <span t-field="team.name"/></p>
@@ -20,10 +26,13 @@
                             </div>
                         </div>
 
+                        <!-- Calcula los partidos pendientes mediante método del modelo. -->
                         <t t-set="pending_matches" t-value="team.get_pending_matches_for_report()"/>
+                        <!-- Tabla de partidos pendientes o confirmados. -->
                         <h4>Partidos pendientes o confirmados</h4>
                         <table class="table table-sm o_main_table">
                             <thead>
+                                <!-- Cabecera de columnas de partidos. -->
                                 <tr>
                                     <th>Código</th>
                                     <th>Rival</th>
@@ -34,6 +43,7 @@
                                 </tr>
                             </thead>
                             <tbody>
+                                <!-- Una fila por cada partido pendiente. -->
                                 <tr t-foreach="pending_matches" t-as="match">
                                     <td><span t-field="match.code"/></td>
                                     <td><span t-field="match.opponent"/></td>
@@ -42,16 +52,20 @@
                                     <td><span t-field="match.match_type"/></td>
                                     <td><span t-field="match.state"/></td>
                                 </tr>
+                                <!-- Mensaje si el equipo no tiene partidos pendientes. -->
                                 <tr t-if="not pending_matches">
                                     <td colspan="6" class="text-center">No hay partidos pendientes para este equipo.</td>
                                 </tr>
                             </tbody>
                         </table>
 
+                        <!-- Calcula los jugadores disponibles mediante método del modelo. -->
                         <t t-set="available_players" t-value="team.get_available_players_for_report()"/>
+                        <!-- Tabla de jugadores disponibles. -->
                         <h4 class="mt24">Jugadores disponibles</h4>
                         <table class="table table-sm">
                             <thead>
+                                <!-- Cabecera de columnas de jugadores. -->
                                 <tr>
                                     <th>Nombre</th>
                                     <th>Posición</th>
@@ -59,11 +73,13 @@
                                 </tr>
                             </thead>
                             <tbody>
+                                <!-- Una fila por cada jugador disponible. -->
                                 <tr t-foreach="available_players" t-as="player">
                                     <td><span t-field="player.full_name"/></td>
                                     <td><span t-field="player.position"/></td>
                                     <td><span t-field="player.jersey_number"/></td>
                                 </tr>
+                                <!-- Mensaje si no hay jugadores disponibles. -->
                                 <tr t-if="not available_players">
                                     <td colspan="3" class="text-center">No hay jugadores disponibles.</td>
                                 </tr>

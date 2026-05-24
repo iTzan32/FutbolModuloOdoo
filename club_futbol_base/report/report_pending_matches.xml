@@ -1,14 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <!-- Acción de informe PDF para equipos. -->
     <record id="action_report_pending_matches" model="ir.actions.report">
+        <!-- Nombre visible del informe en Odoo. -->
         <field name="name">Informe de partidos pendientes por equipo</field>
+        <!-- Modelo desde el que se imprime el informe. -->
         <field name="model">football.team</field>
+        <!-- Tipo de salida: PDF generado con QWeb. -->
         <field name="report_type">qweb-pdf</field>
+        <!-- Plantilla QWeb usada para renderizar el informe. -->
         <field name="report_name">club_futbol_base.report_pending_matches_document</field>
+        <!-- Nombre técnico del archivo de informe. -->
         <field name="report_file">club_futbol_base.report_pending_matches_document</field>
+        <!-- Enlaza el informe al modelo de equipos. -->
         <field name="binding_model_id" ref="model_football_team"/>
+        <!-- Hace que aparezca en el menú Imprimir. -->
         <field name="binding_type">report</field>
+        <!-- Nombre dinámico del PDF descargado. -->
         <field name="print_report_name">'Partidos pendientes - %s' % (object.name)</field>
     </record>
 </odoo>
-

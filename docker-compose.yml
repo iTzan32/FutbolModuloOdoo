@@ -1,37 +1,48 @@
 services:
+  # Base de datos PostgreSQL que usa Odoo.
   db:
     image: postgres:15
     container_name: club_futbol_base_db
+    # Variables iniciales para crear la base y el usuario.
     environment:
       POSTGRES_DB: postgres
       POSTGRES_USER: odoo
       POSTGRES_PASSWORD: odoo
       PGDATA: /var/lib/postgresql/data/pgdata
+    # Guarda los datos de PostgreSQL fuera del contenedor.
     volumes:
       - club_futbol_base_db_data:/var/lib/postgresql/data/pgdata
+    # Reinicia el servicio salvo que se pare manualmente.
     restart: unless-stopped
 
+  # Servidor Odoo donde se instala el módulo del club.
   odoo:
     image: odoo:17.0
     container_name: club_futbol_base_odoo
+    # Espera a que PostgreSQL esté creado antes de arrancar Odoo.
     depends_on:
       - db
+    # Expone Odoo en http://localhost:8069.
     ports:
       - "8069:8069"
+    # Conexión de Odoo contra el servicio db.
     environment:
       HOST: db
       USER: odoo
       PASSWORD: odoo
+    # Persiste datos de Odoo y monta el módulo local como extra addon.
     volumes:
       - club_futbol_base_odoo_data:/var/lib/odoo
       - ./club_futbol_base:/mnt/extra-addons/club_futbol_base
+    # Arranca Odoo en modo desarrollo cargando addons oficiales y locales.
     command: >
       odoo
       --addons-path=/usr/lib/python3/dist-packages/odoo/addons,/mnt/extra-addons
       --dev=all
+    # Mantiene Odoo activo durante el desarrollo.
     restart: unless-stopped
 
+# Volúmenes nombrados para no perder datos al recrear contenedores.
 volumes:
   club_futbol_base_db_data:
   club_futbol_base_odoo_data:
-

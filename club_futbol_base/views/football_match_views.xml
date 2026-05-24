@@ -1,14 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <!-- Vista lista: muestra partidos con colores según estado o resultado. -->
     <record id="view_football_match_tree" model="ir.ui.view">
+        <!-- Nombre técnico de la vista. -->
         <field name="name">football.match.tree</field>
+        <!-- Modelo que se enseña en la tabla. -->
         <field name="model">football.match</field>
+        <!-- Tabla principal de partidos. -->
         <field name="arch" type="xml">
             <tree string="Partidos"
                   decoration-success="state == 'played' and result_label != 'Derrota'"
                   decoration-info="state == 'confirmed'"
                   decoration-muted="state == 'cancelled'"
                   decoration-danger="result_label == 'Derrota'">
+                <!-- Columnas de planificación y resultado. -->
                 <field name="match_date"/>
                 <field name="code"/>
                 <field name="team_id"/>
@@ -24,11 +29,16 @@
         </field>
     </record>
 
+    <!-- Vista formulario: ficha completa de un partido. -->
     <record id="view_football_match_form" model="ir.ui.view">
+        <!-- Nombre técnico de la vista formulario. -->
         <field name="name">football.match.form</field>
+        <!-- Modelo que usa el formulario. -->
         <field name="model">football.match</field>
+        <!-- Diseño de la ficha del partido. -->
         <field name="arch" type="xml">
             <form string="Partido">
+                <!-- Botones de acciones de estado e informe. -->
                 <header>
                     <button name="action_confirm" string="Confirmar" type="object" class="btn-primary"/>
                     <button name="action_mark_played" string="Marcar jugado" type="object"/>
@@ -38,12 +48,14 @@
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,played,cancelled"/>
                 </header>
                 <sheet>
+                    <!-- Cabecera con el código automático del partido. -->
                     <div class="oe_title">
                         <label for="code"/>
                         <h1>
                             <field name="code" readonly="1"/>
                         </h1>
                     </div>
+                    <!-- Datos del encuentro y marcador. -->
                     <group>
                         <group>
                             <field name="team_id"/>
@@ -59,12 +71,15 @@
                             <field name="total_goals" readonly="1"/>
                         </group>
                     </group>
+                    <!-- Pestañas para convocatoria y notas. -->
                     <notebook>
+                        <!-- Jugadores convocados, filtrados por equipo y disponibilidad. -->
                         <page string="Convocatoria">
                             <field name="player_ids"
                                    widget="many2many_tags"
                                    domain="[('team_id', '=', team_id), ('state', '=', 'available')]"/>
                         </page>
+                        <!-- Observaciones internas del partido. -->
                         <page string="Observaciones">
                             <field name="notes" placeholder="Observaciones del partido"/>
                         </page>
@@ -74,14 +89,19 @@
         </field>
     </record>
 
+    <!-- Vista calendario: ubica partidos por fecha. -->
     <record id="view_football_match_calendar" model="ir.ui.view">
+        <!-- Nombre técnico de la vista calendario. -->
         <field name="name">football.match.calendar</field>
+        <!-- Modelo que alimenta el calendario. -->
         <field name="model">football.match</field>
+        <!-- Configuración del calendario. -->
         <field name="arch" type="xml">
             <calendar string="Calendario de partidos"
                       date_start="match_date"
                       color="team_id"
                       event_open_popup="true">
+                <!-- Datos que aparecen en cada evento. -->
                 <field name="code"/>
                 <field name="team_id"/>
                 <field name="opponent"/>
@@ -91,9 +111,13 @@
         </field>
     </record>
 
+    <!-- Vista búsqueda: filtros de partidos por texto, estado y tipo. -->
     <record id="view_football_match_search" model="ir.ui.view">
+        <!-- Nombre técnico del buscador. -->
         <field name="name">football.match.search</field>
+        <!-- Modelo consultado por el buscador. -->
         <field name="model">football.match</field>
+        <!-- Campos y filtros disponibles para partidos. -->
         <field name="arch" type="xml">
             <search string="Buscar partidos">
                 <!-- Búsqueda general por código, rival o campo. -->
@@ -104,16 +128,20 @@
                 <field name="opponent"/>
                 <field name="field_name"/>
 
+                <!-- Filtros rápidos por estado del partido. -->
                 <filter name="confirmed_matches" string="Confirmados" domain="[('state', '=', 'confirmed')]"/>
                 <filter name="played_matches" string="Jugados" domain="[('state', '=', 'played')]"/>
                 <filter name="pending_matches" string="Pendientes" domain="[('state', 'in', ['draft', 'confirmed'])]"/>
                 <separator/>
+                <!-- Filtros rápidos por tipo de partido. -->
                 <filter name="league_matches" string="Liga" domain="[('match_type', '=', 'league')]"/>
                 <filter name="friendly_matches" string="Amistoso" domain="[('match_type', '=', 'friendly')]"/>
                 <filter name="tournament_matches" string="Torneo" domain="[('match_type', '=', 'tournament')]"/>
                 <separator/>
+                <!-- Filtro de próximos partidos pendientes de disputar. -->
                 <filter name="upcoming_matches" string="Próximos partidos" domain="[('state', 'in', ['draft', 'confirmed'])]"/>
 
+                <!-- Agrupaciones del listado. -->
                 <group expand="0" string="Agrupar por">
                     <filter name="group_team" string="Equipo" context="{'group_by': 'team_id'}"/>
                     <filter name="group_state" string="Estado" context="{'group_by': 'state'}"/>
@@ -123,17 +151,25 @@
         </field>
     </record>
 
+    <!-- Acción de ventana: abre la gestión de partidos. -->
     <record id="action_football_match" model="ir.actions.act_window">
+        <!-- Título de la acción. -->
         <field name="name">Partidos</field>
+        <!-- Modelo que abre la acción. -->
         <field name="res_model">football.match</field>
+        <!-- Vistas disponibles para partidos. -->
         <field name="view_mode">tree,form,calendar</field>
+        <!-- Buscador asociado a la acción. -->
         <field name="search_view_id" ref="view_football_match_search"/>
+        <!-- Filtro aplicado por defecto al abrir partidos. -->
         <field name="context">{'search_default_pending_matches': 1}</field>
+        <!-- Mensaje mostrado si no hay partidos. -->
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">Crea partidos y gestiona convocatorias.</p>
         </field>
     </record>
 
+    <!-- Entrada de menú para abrir partidos. -->
     <menuitem id="menu_football_matches"
               name="Partidos"
               parent="menu_football_management"

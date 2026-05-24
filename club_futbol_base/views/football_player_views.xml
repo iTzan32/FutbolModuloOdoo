@@ -1,13 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <!-- Vista lista: muestra jugadores en tabla con colores por estado. -->
     <record id="view_football_player_tree" model="ir.ui.view">
+        <!-- Nombre técnico de la vista. -->
         <field name="name">football.player.tree</field>
+        <!-- Modelo al que pertenece esta vista. -->
         <field name="model">football.player</field>
+        <!-- Estructura visual de la tabla. -->
         <field name="arch" type="xml">
             <tree string="Jugadores"
                   decoration-success="state == 'available'"
                   decoration-warning="state == 'injured'"
                   decoration-danger="state in ('suspended', 'inactive')">
+                <!-- Columnas principales del listado. -->
                 <field name="jersey_number"/>
                 <field name="full_name"/>
                 <field name="team_id"/>
@@ -20,18 +25,25 @@
         </field>
     </record>
 
+    <!-- Vista formulario: ficha completa de un jugador. -->
     <record id="view_football_player_form" model="ir.ui.view">
+        <!-- Nombre técnico de la vista formulario. -->
         <field name="name">football.player.form</field>
+        <!-- Modelo que usa el formulario. -->
         <field name="model">football.player</field>
+        <!-- Diseño del formulario. -->
         <field name="arch" type="xml">
             <form string="Jugador">
                 <sheet>
+                    <!-- Foto del jugador en formato avatar. -->
                     <field name="photo" widget="image" class="oe_avatar"/>
+                    <!-- Cabecera con el nombre completo calculado. -->
                     <div class="oe_title">
                         <h1>
                             <field name="full_name" readonly="1"/>
                         </h1>
                     </div>
+                    <!-- Datos personales y deportivos separados en dos columnas. -->
                     <group>
                         <group>
                             <field name="name"/>
@@ -46,6 +58,7 @@
                             <field name="state"/>
                         </group>
                     </group>
+                    <!-- Datos de edad: fecha editable y edad calculada. -->
                     <group>
                         <field name="birthdate"/>
                         <field name="age" readonly="1"/>
@@ -55,11 +68,16 @@
         </field>
     </record>
 
+    <!-- Vista kanban: tarjetas agrupadas por equipo. -->
     <record id="view_football_player_kanban" model="ir.ui.view">
+        <!-- Nombre técnico de la vista kanban. -->
         <field name="name">football.player.kanban</field>
+        <!-- Modelo que alimenta las tarjetas. -->
         <field name="model">football.player</field>
+        <!-- Plantilla visual de cada tarjeta. -->
         <field name="arch" type="xml">
             <kanban string="Jugadores" default_group_by="team_id">
+                <!-- Campos precargados para usarlos dentro de la tarjeta. -->
                 <field name="photo"/>
                 <field name="full_name"/>
                 <field name="position"/>
@@ -67,10 +85,13 @@
                 <field name="jersey_number"/>
                 <templates>
                     <t t-name="kanban-box">
+                        <!-- Tarjeta clicable de jugador. -->
                         <div class="oe_kanban_global_click o_kanban_record">
+                            <!-- Imagen del jugador. -->
                             <div class="o_kanban_image">
                                 <field name="photo" widget="image"/>
                             </div>
+                            <!-- Detalles deportivos visibles en la tarjeta. -->
                             <div class="oe_kanban_details">
                                 <strong>
                                     <field name="full_name"/>
@@ -92,16 +113,23 @@
         </field>
     </record>
 
+    <!-- Vista de búsqueda: campos, filtros y agrupaciones disponibles. -->
     <record id="view_football_player_search" model="ir.ui.view">
+        <!-- Nombre técnico de la vista de búsqueda. -->
         <field name="name">football.player.search</field>
+        <!-- Modelo sobre el que se buscan jugadores. -->
         <field name="model">football.player</field>
+        <!-- Configuración del buscador. -->
         <field name="arch" type="xml">
             <search string="Buscar jugadores">
+                <!-- Campos por los que el usuario puede buscar. -->
                 <field name="full_name"/>
                 <field name="dni"/>
                 <field name="team_id"/>
+                <!-- Filtros rápidos por estado. -->
                 <filter name="available_players" string="Disponibles" domain="[('state', '=', 'available')]"/>
                 <filter name="injured_players" string="Lesionados" domain="[('state', '=', 'injured')]"/>
+                <!-- Agrupaciones del listado. -->
                 <group expand="0" string="Agrupar por">
                     <filter name="group_team" string="Equipo" context="{'group_by': 'team_id'}"/>
                     <filter name="group_position" string="Posición" context="{'group_by': 'position'}"/>
@@ -111,16 +139,23 @@
         </field>
     </record>
 
+    <!-- Acción de ventana: abre jugadores desde el menú. -->
     <record id="action_football_player" model="ir.actions.act_window">
+        <!-- Título mostrado en Odoo. -->
         <field name="name">Jugadores</field>
+        <!-- Modelo que se abre con esta acción. -->
         <field name="res_model">football.player</field>
+        <!-- Orden de vistas disponibles. -->
         <field name="view_mode">kanban,tree,form</field>
+        <!-- Buscador asociado a la acción. -->
         <field name="search_view_id" ref="view_football_player_search"/>
+        <!-- Mensaje cuando todavía no hay jugadores. -->
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">Registra los jugadores del club.</p>
         </field>
     </record>
 
+    <!-- Entrada de menú para acceder a jugadores. -->
     <menuitem id="menu_football_players"
               name="Jugadores"
               parent="menu_football_management"

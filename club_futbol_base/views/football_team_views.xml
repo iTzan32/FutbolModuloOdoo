@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <!-- Vista lista: muestra equipos en formato tabla. -->
     <record id="view_football_team_tree" model="ir.ui.view">
+        <!-- Nombre técnico de la vista. -->
         <field name="name">football.team.tree</field>
+        <!-- Modelo que se representa en la tabla. -->
         <field name="model">football.team</field>
+        <!-- Columnas visibles en el listado. -->
         <field name="arch" type="xml">
             <tree string="Equipos">
                 <field name="name"/>
@@ -16,17 +20,23 @@
         </field>
     </record>
 
+    <!-- Vista formulario: ficha completa de un equipo. -->
     <record id="view_football_team_form" model="ir.ui.view">
+        <!-- Nombre técnico de la vista formulario. -->
         <field name="name">football.team.form</field>
+        <!-- Modelo que usa esta vista. -->
         <field name="model">football.team</field>
+        <!-- Diseño de la ficha del equipo. -->
         <field name="arch" type="xml">
             <form string="Equipo">
                 <sheet>
+                    <!-- Cabecera con el nombre del equipo. -->
                     <div class="oe_title">
                         <h1>
                             <field name="name" placeholder="Nombre del equipo"/>
                         </h1>
                     </div>
+                    <!-- Datos generales repartidos en dos columnas. -->
                     <group>
                         <group>
                             <field name="category"/>
@@ -39,10 +49,13 @@
                             <field name="active"/>
                         </group>
                     </group>
+                    <!-- Pestañas para consultar plantilla y partidos. -->
                     <notebook>
+                        <!-- Pestaña de jugadores del equipo. -->
                         <page string="Jugadores">
                             <!-- Lista editable para mantener la plantilla desde el propio equipo. -->
                             <field name="player_ids">
+                                <!-- Tabla embebida para crear o editar jugadores. -->
                                 <tree editable="bottom" string="Jugadores">
                                     <field name="jersey_number"/>
                                     <field name="name"/>
@@ -56,7 +69,9 @@
                                 </tree>
                             </field>
                         </page>
+                        <!-- Pestaña de partidos relacionados con el equipo. -->
                         <page string="Partidos">
+                            <!-- Solo lectura para evitar editar partidos desde aquí. -->
                             <field name="match_ids" readonly="1">
                                 <tree string="Partidos">
                                     <field name="code"/>
@@ -75,15 +90,22 @@
         </field>
     </record>
 
+    <!-- Vista de búsqueda: filtros y agrupaciones de equipos. -->
     <record id="view_football_team_search" model="ir.ui.view">
+        <!-- Nombre técnico de la vista de búsqueda. -->
         <field name="name">football.team.search</field>
+        <!-- Modelo consultado por el buscador. -->
         <field name="model">football.team</field>
+        <!-- Campos y filtros disponibles. -->
         <field name="arch" type="xml">
             <search string="Buscar equipos">
+                <!-- Campos de búsqueda directa. -->
                 <field name="name"/>
                 <field name="coach_name"/>
                 <field name="season"/>
+                <!-- Filtro rápido para equipos activos. -->
                 <filter name="active_teams" string="Activos" domain="[('active', '=', True)]"/>
+                <!-- Agrupaciones del listado. -->
                 <group expand="0" string="Agrupar por">
                     <filter name="group_category" string="Categoría" context="{'group_by': 'category'}"/>
                     <filter name="group_season" string="Temporada" context="{'group_by': 'season'}"/>
@@ -92,16 +114,23 @@
         </field>
     </record>
 
+    <!-- Acción de ventana: abre la gestión de equipos. -->
     <record id="action_football_team" model="ir.actions.act_window">
+        <!-- Título mostrado en Odoo. -->
         <field name="name">Equipos</field>
+        <!-- Modelo que abre la acción. -->
         <field name="res_model">football.team</field>
+        <!-- Vistas disponibles para equipos. -->
         <field name="view_mode">tree,form</field>
+        <!-- Buscador asociado a la acción. -->
         <field name="search_view_id" ref="view_football_team_search"/>
+        <!-- Mensaje inicial si no hay registros. -->
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">Crea el primer equipo del club.</p>
         </field>
     </record>
 
+    <!-- Entrada de menú para abrir equipos. -->
     <menuitem id="menu_football_teams"
               name="Equipos"
               parent="menu_football_management"

@@ -2,12 +2,17 @@
 <odoo>
     <!-- Secuencia automática para asignar códigos únicos a los partidos. -->
     <record id="seq_football_match" model="ir.sequence">
+        <!-- Nombre visible de la secuencia en Ajustes técnicos. -->
         <field name="name">Código de partido de fútbol base</field>
+        <!-- Código usado desde Python con next_by_code. -->
         <field name="code">football.match</field>
+        <!-- Prefijo que aparece al inicio del código generado. -->
         <field name="prefix">PART-</field>
+        <!-- Número de dígitos rellenados con ceros. -->
         <field name="padding">5</field>
+        <!-- Primer número que se generará. -->
         <field name="number_next">1</field>
+        <!-- Incremento entre códigos consecutivos. -->
         <field name="number_increment">1</field>
     </record>
 </odoo>
-

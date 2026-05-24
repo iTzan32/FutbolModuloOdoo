@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <!-- Menú raíz de la aplicación en Odoo. -->
     <menuitem id="menu_football_root"
               name="Club Fútbol Base"
               sequence="10"/>
 
+    <!-- Submenú que agrupa las opciones de gestión deportiva. -->
     <menuitem id="menu_football_management"
               name="Gestión deportiva"
               parent="menu_football_root"

@@ -1,88 +1,118 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <!-- Equipo de ejemplo para probar la categoría alevín. -->
     <record id="demo_team_alevin_a" model="football.team">
+        <!-- Datos básicos del equipo. -->
         <field name="name">Alevín A</field>
         <field name="category">alevin</field>
         <field name="season">2025/2026</field>
+        <!-- Datos del entrenador de prueba. -->
         <field name="coach_name">Carlos Martínez</field>
         <field name="phone">600111222</field>
     </record>
 
+    <!-- Equipo de ejemplo para probar otra categoría. -->
     <record id="demo_team_infantil_b" model="football.team">
+        <!-- Datos básicos del equipo. -->
         <field name="name">Infantil B</field>
         <field name="category">infantil</field>
         <field name="season">2025/2026</field>
+        <!-- Datos del entrenador de prueba. -->
         <field name="coach_name">Laura Gómez</field>
         <field name="phone">600333444</field>
     </record>
 
+    <!-- Jugador disponible del equipo Alevín A. -->
     <record id="demo_player_1" model="football.player">
+        <!-- Datos personales del jugador. -->
         <field name="name">Pablo</field>
         <field name="surname">Navarro Ruiz</field>
         <field name="dni">12345678A</field>
         <field name="phone">611111111</field>
         <field name="birthdate">2014-03-12</field>
+        <!-- Datos deportivos del jugador. -->
         <field name="position">goalkeeper</field>
         <field name="jersey_number">1</field>
         <field name="state">available</field>
+        <!-- Equipo al que pertenece. -->
         <field name="team_id" ref="demo_team_alevin_a"/>
     </record>
 
+    <!-- Segundo jugador disponible del Alevín A. -->
     <record id="demo_player_2" model="football.player">
+        <!-- Datos personales del jugador. -->
         <field name="name">Mateo</field>
         <field name="surname">Serrano Pérez</field>
         <field name="dni">23456789B</field>
         <field name="phone">622222222</field>
         <field name="birthdate">2014-06-25</field>
+        <!-- Datos deportivos del jugador. -->
         <field name="position">defender</field>
         <field name="jersey_number">4</field>
         <field name="state">available</field>
+        <!-- Equipo al que pertenece. -->
         <field name="team_id" ref="demo_team_alevin_a"/>
     </record>
 
+    <!-- Jugador lesionado para probar reglas de convocatoria. -->
     <record id="demo_player_3" model="football.player">
+        <!-- Datos personales del jugador. -->
         <field name="name">Hugo</field>
         <field name="surname">Castillo López</field>
         <field name="dni">34567890C</field>
         <field name="phone">633333333</field>
         <field name="birthdate">2013-11-04</field>
+        <!-- Estado injured impide convocarlo. -->
         <field name="position">midfielder</field>
         <field name="jersey_number">8</field>
         <field name="state">injured</field>
+        <!-- Equipo al que pertenece. -->
         <field name="team_id" ref="demo_team_alevin_a"/>
     </record>
 
+    <!-- Jugador disponible del equipo Infantil B. -->
     <record id="demo_player_4" model="football.player">
+        <!-- Datos personales del jugador. -->
         <field name="name">Lucas</field>
         <field name="surname">Molina Sánchez</field>
         <field name="dni">45678901D</field>
         <field name="phone">644444444</field>
         <field name="birthdate">2012-01-20</field>
+        <!-- Datos deportivos del jugador. -->
         <field name="position">forward</field>
         <field name="jersey_number">9</field>
         <field name="state">available</field>
+        <!-- Equipo al que pertenece. -->
         <field name="team_id" ref="demo_team_infantil_b"/>
     </record>
 
+    <!-- Partido confirmado de ejemplo con convocatoria. -->
     <record id="demo_match_1" model="football.match">
+        <!-- Equipo, rival, fecha y campo del partido. -->
         <field name="team_id" ref="demo_team_alevin_a"/>
         <field name="opponent">CD Barrio Norte</field>
         <field name="match_date">2026-06-07 10:00:00</field>
         <field name="field_name">Campo Municipal 1</field>
+        <!-- Tipo y estado inicial del partido. -->
         <field name="match_type">league</field>
         <field name="state">confirmed</field>
+        <!-- Convoca a dos jugadores disponibles mediante referencias demo. -->
         <field name="player_ids" eval="[(6, 0, [ref('demo_player_1'), ref('demo_player_2')])]"/>
+        <!-- Observación de prueba. -->
         <field name="notes">Partido de liga de ejemplo.</field>
     </record>
 
+    <!-- Partido en borrador de ejemplo sin convocatoria. -->
     <record id="demo_match_2" model="football.match">
+        <!-- Equipo, rival, fecha y campo del partido. -->
         <field name="team_id" ref="demo_team_infantil_b"/>
         <field name="opponent">UD Mediterráneo</field>
         <field name="match_date">2026-06-14 12:00:00</field>
         <field name="field_name">Campo Anexo</field>
+        <!-- Tipo y estado inicial del partido. -->
         <field name="match_type">friendly</field>
         <field name="state">draft</field>
+        <!-- Observación de prueba. -->
         <field name="notes">Amistoso pendiente de confirmar.</field>
     </record>
 </odoo>
-
